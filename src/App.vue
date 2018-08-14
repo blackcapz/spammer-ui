@@ -1,28 +1,58 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div
+    id="app"
+    class="container">
+    
+    <transition name="fade">
+      <SendButton
+        @onClick="showSpamButton = !showSpamButton"
+        v-if="showSpamButton" />
+    </transition>
+    
+    <transition name="fade">
+      <Wizard v-if="!showSpamButton"/>
+    </transition>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import SendButton from './components/SendButton'
+import Wizard from './components/Wizard'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
-    HelloWorld
-  }
+    SendButton,
+    Wizard
+  },
+  data: () => ({
+    showSpamButton: true
+  })
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+* { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fade-enter, .fade-leave-to {
+  transition: all ease-in .1s;
+  opacity: 0;
 }
 </style>
+
