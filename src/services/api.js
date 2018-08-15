@@ -4,8 +4,7 @@ export default {
   checkStatus: () => {
     return HTTPClient.get('/')
   },
-
-  sendSpam: (payload) => {
-    return HTTPClient.post('/spam', payload)
+  sendSpam: ({ strategy, groups, user, pass, text }) => {
+    return HTTPClient.post('spam', { strategy, groups, user, pass, text })
   }
 }

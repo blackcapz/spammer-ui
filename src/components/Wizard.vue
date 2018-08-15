@@ -45,8 +45,37 @@
         </ElSelect>
       </ElFormItem>
 
+      <!-- <ElFormItem> -->
+      <!-- </ElFormItem> -->
+      <ElFormItem
+        label="Group Ids">
+        <ElTag
+          v-for="(groupId, index) in form.groups"
+          :key="index"
+          closable
+          :disable-transitions="false"
+          @close="handleClose(tag)">
+          {{ groupId }}
+        </ElTag>
+        <ElInput
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="form.groupId"
+          ref="saveTagInput"
+          size="mini"
+          @keyup.enter.native="addNewGroupId"
+          @blur="addNewGroupId">
+        </ElInput>
+        <el-button
+          v-else
+          class="button-new-tag"
+          size="small"
+          @click="showInput">+ New group id</el-button>
+      </ElFormItem>
+
       <ElFormItem>
         <ElButton
+          :disabled="isLoading"
           @click="onSubmit"
           type="primary">Send!</ElButton>
       </ElFormItem>
@@ -64,11 +93,31 @@ export default {
       user: '',
       password: '',
       text: '',
-      strategy: 'Facebook'
-    }
+      strategy: 'Facebook',
+      groupId: '',
+      groups: []
+    },
+    inputVisible: false,
+    isLoading: false,
   }),
   methods: {
+    addNewGroupId () {
+      if (!this.form.groupId) return
+      this.form.groups.push(this.form.groupId)
+      this.form.groupId = ''
+      this.form.groups = [...new Set(this.form.groups)]
+    },
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    handleClose(tag) {
+      this.form.groups.splice(this.form.groups.indexOf(tag), 1)
+    },
     onSubmit () {
+      this.isLoading = true
       this.$refs['form'].validate(async (valid) => {
         if (!valid) {
           const message = {
@@ -76,23 +125,48 @@ export default {
             type: 'warning'
           }  
           this.$message(message)
+          this.isLoading = false
           return
         }
 
         try {
           const { data: { status, body } } = await api.sendSpam(this.form)
 
-          if (status !== 200) return
+          if (status !== 200) {
+            this.isLoading = false
+            return
+          }
+
           const message = {
             message: body,
             type: 'success'
           }
           this.$message(message)
+          this.isLoading = false
         } catch (error) {
           this.$message.error('Oops, some error happen :(')
+          this.isLoading = false
         }
       })
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
+</style>

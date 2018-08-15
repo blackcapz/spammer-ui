@@ -8,7 +8,8 @@ import {
   FormItem,
   Button,
   Option,
-  Message
+  Message,
+  Tag
 } from 'element-ui'
 import App from './App.vue'
 
@@ -21,6 +22,7 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Button)
 Vue.use(Option)
+Vue.use(Tag)
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$message = Message;
