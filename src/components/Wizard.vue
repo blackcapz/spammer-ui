@@ -26,7 +26,7 @@
       </ElFormItem>
 
       <ElFormItem>
-        <ElButton type="primary">Send SPAM!</ElButton>
+        <ElButton type="primary">Send!</ElButton>
       </ElFormItem>
     </ElForm>    
   </ElCard>

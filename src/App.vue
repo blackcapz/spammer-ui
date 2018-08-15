@@ -6,6 +6,7 @@
     <transition name="fade">
       <SendButton
         @onClick="showSpamButton = !showSpamButton"
+        :disabled="spamButtonDisabled"
         v-if="showSpamButton" />
     </transition>
     
@@ -27,13 +28,26 @@ export default {
     Wizard
   },
   data: () => ({
-    showSpamButton: true
+    showSpamButton: true,
+    spamButtonDisabled: false
   }),
   async mounted () {
     try {
-      console.log(await api.checkStatus())
+      const { status } = await api.checkStatus()
+      if (status !== 200) return
+      const message = {
+        message: 'Spammer core connection successfully',
+        type: 'success'
+      }  
+      this.$message(message)
     } catch (error) {
-      console.log('err', error)
+      const message = {
+        message: 'API Offline, please run spammer core.',
+        type: 'warning'
+      }  
+      this.$message(message)
+      this.spamButtonDisabled = true
+      console.log('* Error', error) // eslint-disable-line
     }
   }
 }
