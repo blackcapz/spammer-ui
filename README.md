@@ -1,6 +1,21 @@
-## Spammer UI
+<p align="center">
+  <h3 align="center">Spammer UI</h3>
+  <p align="center">An UI to facilites access to spammer core.</p>
 
-> An UI to facilites access to spammer core. 
+  <p align="center">
+    <a href="http://standardjs.com/">
+        <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg">
+    </a>
+  </p>
+  
+  <p align="center">
+    <img src="public/screens/start.png">
+    <img src="public/screens/form.png">
+  </p>
+</p>
+
+--- 
+
 
 ### Project setup
 

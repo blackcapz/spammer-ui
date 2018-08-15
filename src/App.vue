@@ -29,25 +29,42 @@ export default {
   },
   data: () => ({
     showSpamButton: true,
-    spamButtonDisabled: false
+    spamButtonDisabled: false,
+    checkIntervalInstace: null,
+    isFirstLoading: true,
   }),
-  async mounted () {
-    try {
-      const { status } = await api.checkStatus()
-      if (status !== 200) return
-      const message = {
-        message: 'Spammer core connection successfully',
-        type: 'success'
-      }  
-      this.$message(message)
-    } catch (error) {
-      const message = {
-        message: 'API Offline, please run spammer core.',
-        type: 'warning'
-      }  
-      this.$message(message)
-      this.spamButtonDisabled = true
-      console.log('* Error', error) // eslint-disable-line
+  mounted () {
+    this.checkConnection()
+    this.checkIntervalInstace = window.setInterval(this.checkConnection, 3000)
+  },
+  beforeDestroy () {
+    window.clearInterval(this.checkIntervalInstace)
+  },
+  methods: {
+    async checkConnection () {
+      try {
+        const { status } = await api.checkStatus()
+        if (status !== 200) return
+
+        if (this.isFirstLoading) {
+          const message = {
+            message: 'Spammer core connection successfully',
+            type: 'success'
+          }
+          this.$message(message)
+          this.isFirstLoading = false
+        }
+        this.spamButtonDisabled = false
+      } catch (error) {
+        const message = {
+          message: 'API Offline, please run spammer core.',
+          type: 'warning'
+        }  
+        this.$message(message)
+        this.isFirstLoading = true
+        this.spamButtonDisabled = true
+        console.log('* Error', error) // eslint-disable-line
+      }
     }
   }
 }

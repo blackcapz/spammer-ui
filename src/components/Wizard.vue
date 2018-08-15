@@ -21,7 +21,7 @@
           { required: true, message: 'Please fill this field', trigger: 'blur' }
         ]"
         label="Password">
-        <ElInput v-model="form.password" type="password" placeholder="Password" auto-complete="off" />
+        <ElInput v-model="form.pass" type="password" placeholder="Password" auto-complete="off" />
       </ElFormItem>
 
       <ElFormItem
@@ -45,10 +45,11 @@
         </ElSelect>
       </ElFormItem>
 
-      <!-- <ElFormItem> -->
-      <!-- </ElFormItem> -->
       <ElFormItem
-        label="Group Ids">
+        label="Group Ids"
+        :rules="[
+          { required: true, message: 'Please fill this field', trigger: 'blur' }
+        ]">
         <ElTag
           v-for="(groupId, index) in form.groups"
           :key="index"
@@ -109,9 +110,7 @@ export default {
     },
     showInput() {
       this.inputVisible = true;
-      this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus()
-      })
+      this.$nextTick(() => this.$refs.saveTagInput.$refs.input.focus())
     },
     handleClose(tag) {
       this.form.groups.splice(this.form.groups.indexOf(tag), 1)
@@ -143,6 +142,14 @@ export default {
           }
           this.$message(message)
           this.isLoading = false
+          this.form = {
+            user: '',
+            password: '',
+            text: '',
+            strategy: 'Facebook',
+            groupId: '',
+            groups: []
+          }
         } catch (error) {
           this.$message.error('Oops, some error happen :(')
           this.isLoading = false
